@@ -20,7 +20,8 @@ import com.example.app.ui.theme.AppTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
-    onNavigateToTenants: () -> Unit = {}
+    onNavigateToTenants: () -> Unit = {},
+    onNavigateToHouse: () -> Unit = {}
 ) {
     Scaffold(
         topBar = {
@@ -37,10 +38,7 @@ fun DashboardScreen(
                 },
                 actions = {
                     IconButton(onClick = { }) {
-                        Icon(
-                            Icons.Default.Notifications,
-                            contentDescription = "Thông báo"
-                        )
+                        Icon(Icons.Default.Notifications, contentDescription = "Thông báo")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -59,7 +57,6 @@ fun DashboardScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // ── Thống kê nhanh ──
             Text(
                 text = "Tổng quan tháng 4/2025",
                 style = MaterialTheme.typography.titleSmall,
@@ -68,30 +65,11 @@ fun DashboardScreen(
             )
 
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                StatCard(
-                    label = "Đang thuê",
-                    value = "1",
-                    color = Color(0xFF085041),
-                    bgColor = Color(0xFFE1F5EE),
-                    modifier = Modifier.weight(1f)
-                )
-                StatCard(
-                    label = "Sắp hết hạn",
-                    value = "1",
-                    color = Color(0xFF633806),
-                    bgColor = Color(0xFFFAEEDA),
-                    modifier = Modifier.weight(1f)
-                )
-                StatCard(
-                    label = "Đã trả phòng",
-                    value = "1",
-                    color = Color(0xFF5F5E5A),
-                    bgColor = Color(0xFFF1EFE8),
-                    modifier = Modifier.weight(1f)
-                )
+                StatCard("Đang thuê", "1", Color(0xFF085041), Color(0xFFE1F5EE), Modifier.weight(1f))
+                StatCard("Sắp hết hạn", "1", Color(0xFF633806), Color(0xFFFAEEDA), Modifier.weight(1f))
+                StatCard("Đã trả phòng", "1", Color(0xFF5F5E5A), Color(0xFFF1EFE8), Modifier.weight(1f))
             }
 
-            // ── Doanh thu tháng ──
             Card(
                 shape = RoundedCornerShape(12.dp),
                 colors = CardDefaults.cardColors(
@@ -125,14 +103,12 @@ fun DashboardScreen(
                 }
             }
 
-            // ── Nhắc nhở ──
             Text(
                 text = "Nhắc nhở",
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-
             ReminderCard(
                 title = "Sắp hết hạn hợp đồng",
                 subtitle = "Trần Thị Lan · Còn 28 ngày",
@@ -146,14 +122,12 @@ fun DashboardScreen(
                 textColor = Color(0xFF185FA5)
             )
 
-            // ── Truy cập nhanh ──
             Text(
                 text = "Truy cập nhanh",
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 QuickAccessCard(
                     label = "Danh sách\nkhách thuê",
@@ -161,8 +135,8 @@ fun DashboardScreen(
                     modifier = Modifier.weight(1f)
                 )
                 QuickAccessCard(
-                    label = "Tính tiền\ntháng này",
-                    onClick = { },
+                    label = "Thông tin\nnhà trọ",
+                    onClick = onNavigateToHouse,
                     modifier = Modifier.weight(1f)
                 )
             }
@@ -189,17 +163,8 @@ fun StatCard(
             modifier = Modifier.padding(12.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = value,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                color = color
-            )
-            Text(
-                text = label,
-                style = MaterialTheme.typography.labelSmall,
-                color = color
-            )
+            Text(text = value, fontSize = 24.sp, fontWeight = FontWeight.Bold, color = color)
+            Text(text = label, style = MaterialTheme.typography.labelSmall, color = color)
         }
     }
 }
@@ -222,55 +187,34 @@ fun MiniStat(label: String, value: String) {
 }
 
 @Composable
-fun ReminderCard(
-    title: String,
-    subtitle: String,
-    color: Color,
-    textColor: Color
-) {
+fun ReminderCard(title: String, subtitle: String, color: Color, textColor: Color) {
     Card(
         shape = RoundedCornerShape(10.dp),
         colors = CardDefaults.cardColors(containerColor = color)
     ) {
         Column(modifier = Modifier.padding(12.dp)) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Medium,
-                color = textColor
-            )
-            Text(
-                text = subtitle,
-                style = MaterialTheme.typography.bodySmall,
-                color = textColor.copy(alpha = 0.8f)
-            )
+            Text(text = title, style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Medium, color = textColor)
+            Text(text = subtitle, style = MaterialTheme.typography.bodySmall,
+                color = textColor.copy(alpha = 0.8f))
         }
     }
 }
 
 @Composable
-fun QuickAccessCard(
-    label: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
+fun QuickAccessCard(label: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
     Card(
         onClick = onClick,
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         border = androidx.compose.foundation.BorderStroke(
-            0.5.dp,
-            MaterialTheme.colorScheme.outlineVariant
+            0.5.dp, MaterialTheme.colorScheme.outlineVariant
         ),
         modifier = modifier
     ) {
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp)
+            modifier = Modifier.fillMaxWidth().padding(20.dp)
         ) {
             Text(
                 text = label,
@@ -285,7 +229,5 @@ fun QuickAccessCard(
 @Preview(showBackground = true)
 @Composable
 fun PreviewDashboard() {
-    AppTheme {
-        DashboardScreen()
-    }
+    AppTheme { DashboardScreen() }
 }

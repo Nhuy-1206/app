@@ -2,7 +2,6 @@ package com.example.app
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -22,7 +21,6 @@ import com.example.app.ui.theme.AppTheme
 fun AddTenantScreen(
     onNavigateBack: () -> Unit = {}
 ) {
-    // State cho từng field
     var fullName by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
     var cccd by remember { mutableStateOf("") }
@@ -34,7 +32,6 @@ fun AddTenantScreen(
     var deposit by remember { mutableStateOf("") }
     var note by remember { mutableStateOf("") }
 
-    // Validate
     val isFormValid = fullName.isNotBlank()
             && phone.isNotBlank()
             && cccd.isNotBlank()
@@ -70,8 +67,6 @@ fun AddTenantScreen(
                 .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-
-            // ── Section 1: Thông tin cá nhân ──
             SectionLabel(title = "Thông tin cá nhân")
 
             RentalTextField(
@@ -80,7 +75,6 @@ fun AddTenantScreen(
                 label = "Họ và tên *",
                 placeholder = "Nguyễn Văn A"
             )
-
             RentalTextField(
                 value = phone,
                 onValueChange = { phone = it },
@@ -88,7 +82,6 @@ fun AddTenantScreen(
                 placeholder = "09xx xxx xxx",
                 keyboardType = KeyboardType.Phone
             )
-
             RentalTextField(
                 value = cccd,
                 onValueChange = { if (it.length <= 12) cccd = it },
@@ -97,7 +90,6 @@ fun AddTenantScreen(
                 keyboardType = KeyboardType.Number,
                 supportingText = "${cccd.length}/12 số"
             )
-
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 RentalTextField(
                     value = hometown,
@@ -116,8 +108,6 @@ fun AddTenantScreen(
             }
 
             Spacer(Modifier.height(4.dp))
-
-            // ── Section 2: Thông tin hợp đồng ──
             SectionLabel(title = "Thông tin hợp đồng")
 
             RentalTextField(
@@ -134,7 +124,6 @@ fun AddTenantScreen(
                     )
                 }
             )
-
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 RentalTextField(
                     value = monthlyRent,
@@ -154,7 +143,6 @@ fun AddTenantScreen(
                 )
             }
 
-            // Thời hạn hợp đồng — dùng dropdown
             ContractMonthsDropdown(
                 selected = contractMonths,
                 onSelected = { contractMonths = it }
@@ -171,7 +159,6 @@ fun AddTenantScreen(
 
             Spacer(Modifier.height(8.dp))
 
-            // Nút lưu
             Button(
                 onClick = { onNavigateBack() },
                 enabled = isFormValid,
@@ -186,8 +173,6 @@ fun AddTenantScreen(
                     fontWeight = FontWeight.Medium
                 )
             }
-
-            // Nút hủy
             OutlinedButton(
                 onClick = onNavigateBack,
                 modifier = Modifier
@@ -195,63 +180,12 @@ fun AddTenantScreen(
                     .height(52.dp),
                 shape = RoundedCornerShape(12.dp)
             ) {
-                Text(
-                    text = "Hủy",
-                    style = MaterialTheme.typography.bodyLarge
-                )
+                Text(text = "Hủy", style = MaterialTheme.typography.bodyLarge)
             }
 
             Spacer(Modifier.height(16.dp))
         }
     }
-}
-
-// ── Reusable components ──
-
-@Composable
-fun SectionLabel(title: String) {
-    Text(
-        text = title,
-        style = MaterialTheme.typography.labelSmall,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        modifier = Modifier.padding(top = 4.dp, bottom = 2.dp)
-    )
-    HorizontalDivider(thickness = 0.5.dp)
-    Spacer(Modifier.height(4.dp))
-}
-
-@Composable
-fun RentalTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    label: String,
-    placeholder: String,
-    modifier: Modifier = Modifier,
-    keyboardType: KeyboardType = KeyboardType.Text,
-    supportingText: String? = null,
-    singleLine: Boolean = true,
-    minLines: Int = 1,
-    trailingIcon: @Composable (() -> Unit)? = null
-) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
-        label = { Text(label, style = MaterialTheme.typography.bodySmall) },
-        placeholder = { Text(placeholder, style = MaterialTheme.typography.bodySmall) },
-        modifier = modifier.fillMaxWidth(),
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-        singleLine = singleLine,
-        minLines = minLines,
-        trailingIcon = trailingIcon,
-        supportingText = if (supportingText != null) {
-            { Text(supportingText, style = MaterialTheme.typography.labelSmall) }
-        } else null,
-        shape = RoundedCornerShape(10.dp),
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colorScheme.primary,
-            unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant
-        )
-    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -271,8 +205,12 @@ fun ContractMonthsDropdown(
             value = "$selected tháng",
             onValueChange = {},
             readOnly = true,
-            label = { Text("Thời hạn hợp đồng", style = MaterialTheme.typography.bodySmall) },
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            label = {
+                Text("Thời hạn hợp đồng", style = MaterialTheme.typography.bodySmall)
+            },
+            trailingIcon = {
+                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .menuAnchor(),

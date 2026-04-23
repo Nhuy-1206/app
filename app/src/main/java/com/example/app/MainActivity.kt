@@ -87,11 +87,15 @@ class MainActivity : ComponentActivity() {
                 NavHost(
                     navController = navController,
                     startDestination = "dashboard"
+
                 ) {
                     composable("dashboard") {
                         DashboardScreen(
                             onNavigateToTenants = {
                                 navController.navigate("tenant_list")
+                            },
+                            onNavigateToHouse = {
+                                navController.navigate("boarding_house")
                             }
                         )
                     }
@@ -102,6 +106,9 @@ class MainActivity : ComponentActivity() {
                             },
                             onNavigateToDetail = { id ->
                                 navController.navigate("tenant_detail/$id")
+                            },
+                            onNavigateToBill = { id ->
+                                navController.navigate("bill/$id")
                             }
                         )
                     }
@@ -126,6 +133,17 @@ class MainActivity : ComponentActivity() {
                         val tenant = fakeTenants.find { it.id == id } ?: fakeTenants[0]
                         BillScreen(
                             tenant = tenant,
+                            onNavigateBack = { navController.popBackStack() }
+                        )
+                    }
+                    composable("boarding_house") {
+                        BoardingHouseScreen(
+                            onNavigateBack = { navController.popBackStack() },
+                            onNavigateToRooms = { navController.navigate("room_list") }
+                        )
+                    }
+                    composable("room_list") {
+                        RoomListScreen(
                             onNavigateBack = { navController.popBackStack() }
                         )
                     }
@@ -299,7 +317,8 @@ fun TenantCard(tenant: TenantUi,
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TenantListScreen(onNavigateToAdd: () -> Unit = {},
-                     onNavigateToDetail: (Int) -> Unit = {}) {
+                     onNavigateToDetail: (Int) -> Unit = {},
+                     onNavigateToBill: (Int) -> Unit = {}) {
             val grouped = fakeTenants.groupBy { it.status }
 
             Scaffold(
