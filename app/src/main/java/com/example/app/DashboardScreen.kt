@@ -21,7 +21,8 @@ import com.example.app.ui.theme.AppTheme
 @Composable
 fun DashboardScreen(
     onNavigateToTenants: () -> Unit = {},
-    onNavigateToHouse: () -> Unit = {}
+    onNavigateToHouse: () -> Unit = {},
+    onNavigateToMap: () -> Unit= {}
 ) {
     Scaffold(
         topBar = {
@@ -121,7 +122,9 @@ fun DashboardScreen(
                 color = Color(0xFFE6F1FB),
                 textColor = Color(0xFF185FA5)
             )
-
+            Button(onClick = onNavigateToMap) {
+                Text("Xem bản đồ nhà trọ")
+            }
             Text(
                 text = "Truy cập nhanh",
                 style = MaterialTheme.typography.titleSmall,

@@ -10,6 +10,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import android.content.Context
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.viewinterop.AndroidView
+import org.osmdroid.config.Configuration
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.Marker
 
 @Composable
 fun SectionLabel(title: String) {
@@ -202,4 +211,57 @@ fun formatVndLong(amount: Long): String {
     return java.text.NumberFormat
         .getNumberInstance(java.util.Locale("vi", "VN"))
         .format(amount) + "đ"
+}
+
+@Composable
+fun AdvancedOSM() {
+    val context = LocalContext.current
+
+    // Cấu hình lưu trữ cache cho bản đồ
+    Configuration.getInstance().load(context, context.getSharedPreferences("osm_pref", Context.MODE_PRIVATE))
+
+    AndroidView(
+        factory = { ctx ->
+            MapView(ctx).apply {
+                // 1. Cấu hình cơ bản
+                setTileSource(TileSourceFactory.MAPNIK)
+                setMultiTouchControls(true)
+                val mapController = controller
+                mapController.setZoom(18.0)
+
+                // 2. Thiết lập tọa độ (Ví dụ: Chợ Bến Thành, TP.HCM)
+                val startPoint = GeoPoint(15.980241,108.249961)
+                mapController.setCenter(startPoint)
+
+                // 3. Thêm Marker (Dấu mốc)
+                val marker = Marker(this)
+                marker.position = startPoint
+                marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+                marker.title = "Chợ Bến Thành"
+                marker.snippet = "Biểu tượng của TP. Hồ Chí Minh"
+
+                overlays.add(marker) // Cho marker lên bản đồ
+            }
+        },
+        modifier = Modifier.fillMaxSize()
+    )
+}
+@Composable
+fun OpenStreetMapFree() {
+    val context = LocalContext.current
+
+    // Cấu hình osmdroid (bắt buộc)
+    Configuration.getInstance().load(context, context.getSharedPreferences("osm_pref", Context.MODE_PRIVATE))
+
+    AndroidView(
+        factory = { ctx ->
+            MapView(ctx).apply {
+                setTileSource(TileSourceFactory.MAPNIK) // Loại bản đồ mặc định
+                setMultiTouchControls(true) // Cho phép thu phóng bằng 2 ngón
+                controller.setZoom(15.0)
+                controller.setCenter(GeoPoint(21.0285, 105.8542)) // Tọa độ Hà Nội
+            }
+        },
+        modifier = Modifier.fillMaxSize()
+    )
 }

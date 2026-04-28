@@ -91,6 +91,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     composable("dashboard") {
                         DashboardScreen(
+                            onNavigateToMap = { navController.navigate("osm_map") },
                             onNavigateToTenants = {
                                 navController.navigate("tenant_list")
                             },
@@ -98,6 +99,20 @@ class MainActivity : ComponentActivity() {
                                 navController.navigate("boarding_house")
                             }
                         )
+                    }
+                    composable("osm_map") {
+                        // Khi điều hướng đến "osm_map", nó sẽ hiển thị màn hình này full screen
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            AdvancedOSM()
+
+                            // Thêm một nút quay lại nhỏ để không bị kẹt ở bản đồ
+                            Button(
+                                onClick = { navController.popBackStack() },
+                                modifier = Modifier.padding(16.dp).align(Alignment.TopStart)
+                            ) {
+                                Text("Quay lại")
+                            }
+                        }
                     }
                     composable("tenant_list") {
                         TenantListScreen(
@@ -383,6 +398,7 @@ fun TenantListScreen(onNavigateToAdd: () -> Unit = {},
                 }
             }
         }
+
 
 
 
