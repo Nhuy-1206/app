@@ -17,7 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.app.ui.theme.AppTheme
-
+import androidx.compose.material.icons.filled.Place
 data class BoardingHouse(
     val name: String = "Nhà trọ Hoàng Gia",
     val address: String = "123 Đường Lê Lợi, P.Bến Nghé, Q.1, TP.HCM",
@@ -39,7 +39,8 @@ val fakeBoardingHouse = BoardingHouse()
 @Composable
 fun BoardingHouseScreen(
     onNavigateBack: () -> Unit = {},
-    onNavigateToRooms: () -> Unit = {}
+    onNavigateToRooms: () -> Unit = {},
+    onNavigateToMap: () -> Unit = {}
 ) {
     var house by remember { mutableStateOf(fakeBoardingHouse) }
     var isEditing by remember { mutableStateOf(false) }
@@ -58,7 +59,8 @@ fun BoardingHouseScreen(
             house = house,
             onNavigateBack = onNavigateBack,
             onEdit = { isEditing = true },
-            onNavigateToRooms = onNavigateToRooms
+            onNavigateToRooms = onNavigateToRooms,
+            onNavigateToMap = onNavigateToMap
         )
     }
 }
@@ -69,7 +71,8 @@ fun BoardingHouseViewScreen(
     house: BoardingHouse,
     onNavigateBack: () -> Unit,
     onEdit: () -> Unit,
-    onNavigateToRooms: () -> Unit
+    onNavigateToRooms: () -> Unit,
+    onNavigateToMap: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -156,6 +159,15 @@ fun BoardingHouseViewScreen(
                 DetailRow(label = "Địa chỉ", value = house.address)
                 DetailRow(label = "Số tầng", value = "${house.totalFloors} tầng")
                 DetailRow(label = "Tổng số phòng", value = "${house.totalRooms} phòng")
+                OutlinedButton(
+                    onClick = onNavigateToMap,
+                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Icon(Icons.Default.Place, contentDescription = null) // Thêm icon cho đẹp
+                    Spacer(Modifier.width(8.dp))
+                    Text("Xem vị trí trên bản đồ")
+                }
             }
 
             // ── Tiện ích chung ──

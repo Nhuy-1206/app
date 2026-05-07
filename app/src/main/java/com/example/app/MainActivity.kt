@@ -91,7 +91,6 @@ class MainActivity : ComponentActivity() {
                 ) {
                     composable("dashboard") {
                         DashboardScreen(
-                            onNavigateToMap = { navController.navigate("osm_map") },
                             onNavigateToTenants = {
                                 navController.navigate("tenant_list")
                             },
@@ -154,7 +153,8 @@ class MainActivity : ComponentActivity() {
                     composable("boarding_house") {
                         BoardingHouseScreen(
                             onNavigateBack = { navController.popBackStack() },
-                            onNavigateToRooms = { navController.navigate("room_list") }
+                            onNavigateToRooms = { navController.navigate("room_list") },
+                            onNavigateToMap = { navController.navigate("osm_map") }
                         )
                     }
                     composable("room_list") {
